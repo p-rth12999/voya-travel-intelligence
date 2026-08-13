@@ -21,6 +21,7 @@ export default async function AlertsPage() {
   const tripList = (trips as Trip[]) || []
 
   const alerts = tripList
+    .filter((t): t is Trip & { start_date: string } => t.start_date !== null)
     .map((t) => ({ trip: t, status: computeDisplayStatus(t), days: daysUntil(t.start_date) }))
     .filter((a) => a.status === 'upcoming' && a.days >= 0 && a.days <= 7)
     .sort((a, b) => a.days - b.days)
