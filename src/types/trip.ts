@@ -1,4 +1,5 @@
 export type TripStatus = 'planning' | 'upcoming' | 'completed' | 'cancelled'
+export type DisplayStatus = 'draft' | TripStatus
 
 export type DestinationMeta = {
   destination: string
@@ -6,6 +7,8 @@ export type DestinationMeta = {
   countryCode: string | null
   lat: number | null
   lon: number | null
+  note?: string | null
+  photoUrl?: string | null
 }
 
 export interface Trip {
@@ -17,8 +20,9 @@ export interface Trip {
   destination_meta: DestinationMeta[] | null
   source_meta: DestinationMeta | null
   auto_sequence: boolean
-  start_date: string
-  end_date: string
+  start_date: string | null
+  end_date: string | null
+  duration_days: number | null
   travelers: number
   budget: number
   currency: string

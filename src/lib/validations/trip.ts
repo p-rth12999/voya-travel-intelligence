@@ -40,13 +40,25 @@ export const ACCESSIBILITY_NEEDS = [
 
 export const CURRENCIES = ['USD', 'EUR', 'GBP', 'INR', 'JPY', 'AUD'] as const
 
+export const destinationCardSchema = z.object({
+  name: z.string().min(2),
+  country: z.string().nullable().optional(),
+  countryCode: z.string().nullable().optional(),
+  lat: z.number().nullable().optional(),
+  lon: z.number().nullable().optional(),
+  note: z.string().optional(),
+  photoUrl: z.string().nullable().optional(),
+})
+
 export const tripFormSchema = z
   .object({
     title: z.string().min(3, 'Title must be at least 3 characters').max(80, 'Title must be under 80 characters'),
     source: z.string().min(2, 'Starting location is required'),
-    destinations: z.array(z.string().min(2)).min(1, 'At least one destination is required'),
-    startDate: z.string().min(1, 'Start date is required'),
-    endDate: z.string().min(1, 'End date is required'),
+    destinations: z.array(destinationCardSchema).min(1, 'At least one destination is required'),
+    useExactDates: z.boolean().default(false),
+    startDate: z.string().optional().default(''),
+    endDate: z.string().optional().default(''),
+    durationDays: z.coerce.number().int().min(1).max(60).optional(),
     travelers: z.coerce.number().int('Must be a whole number').min(1, 'At least 1 traveler is required').max(50, 'Max 50 travelers'),
     budget: z.coerce.number().min(0, 'Budget cannot be negative'),
     currency: z.enum(CURRENCIES),
@@ -56,9 +68,21 @@ export const tripFormSchema = z
     accessibilityNeeds: z.array(z.enum(ACCESSIBILITY_NEEDS)).default([]),
     autoSequence: z.boolean().default(true),
   })
-  .refine((data) => new Date(data.endDate) >= new Date(data.startDate), {
-    message: 'End date must be on or after the start date',
-    path: ['endDate'],
+  .superRefine((data, ctx) => {
+    if (data.useExactDates) {
+      if (!data.startDate) {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Start date is required', path: ['startDate'] })
+      }
+      if (!data.endDate) {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'End date is required', path: ['endDate'] })
+      }
+      if (data.startDate && data.endDate && new Date(data.endDate) < new Date(data.startDate)) {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'End date must be on or after the start date', path: ['endDate'] })
+      }
+    } else if (!data.durationDays) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Trip length is required', path: ['durationDays'] })
+    }
   })
 
 export type TripFormValues = z.infer<typeof tripFormSchema>
+export type DestinationCard = z.infer<typeof destinationCardSchema>

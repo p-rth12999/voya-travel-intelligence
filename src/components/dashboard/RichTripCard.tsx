@@ -12,12 +12,13 @@ import { createClient } from '@/lib/supabase/client'
 import ConfirmDialog from '@/components/shared/ConfirmDialog'
 
 const STATUS_STYLES = {
+  draft: 'bg-purple-600/80 text-white',
   planning: 'bg-gray-900/70 text-white',
   upcoming: 'bg-blue-600/90 text-white',
   completed: 'bg-green-600/90 text-white',
   cancelled: 'bg-red-600/90 text-white',
 }
-const STATUS_LABELS = { planning: 'Planning', upcoming: 'Upcoming', completed: 'Completed', cancelled: 'Cancelled' }
+const STATUS_LABELS = { draft: 'Draft', planning: 'Planning', upcoming: 'Upcoming', completed: 'Completed', cancelled: 'Cancelled' }
 
 function healthPillStyle(score: number) {
   if (score >= 90) return 'bg-green-500/90 text-white'
@@ -92,7 +93,13 @@ export default function RichTripCard({ trip, avgRating }: { trip: Trip; avgRatin
         </div>
 
         <div className="p-4">
-          <p className="text-xs text-gray-400">{trip.start_date} – {trip.end_date}</p>
+          <p className="text-xs text-gray-400">
+            {trip.start_date && trip.end_date
+              ? `${trip.start_date} – ${trip.end_date}`
+              : trip.duration_days
+              ? `${trip.duration_days} day${trip.duration_days > 1 ? 's' : ''} \u2014 dates not set`
+              : 'Dates not set'}
+          </p>
 
           {status === 'completed' && avgRating !== null && (
             <div className="mt-2 flex items-center gap-0.5">
