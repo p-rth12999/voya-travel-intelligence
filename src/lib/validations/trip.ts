@@ -17,6 +17,16 @@ export const TRIP_INTERESTS = [
 
 export const TRANSPORT_MODES = ['Car', 'Bike', 'Train', 'Bus', 'Flight'] as const
 
+export const TRANSPORT_PREFERENCES = [
+  'Prefer Flights',
+  'Prefer Trains',
+  'Prefer Road Trips',
+  'Budget Friendly Transport',
+  'Avoid Overnight Travel',
+  'Minimize Transfers',
+  'Public Transport Friendly',
+] as const
+
 export const FOOD_PREFERENCES = [
   'Vegetarian',
   'Vegan',
@@ -59,10 +69,12 @@ export const tripFormSchema = z
     startDate: z.string().optional().default(''),
     endDate: z.string().optional().default(''),
     durationDays: z.coerce.number().int().min(1).max(60).optional(),
+    startTime: z.string().optional(),
+    endTime: z.string().optional(),
     travelers: z.coerce.number().int('Must be a whole number').min(1, 'At least 1 traveler is required').max(50, 'Max 50 travelers'),
     budget: z.coerce.number().min(0, 'Budget cannot be negative'),
     currency: z.enum(CURRENCIES),
-    transportMode: z.enum(TRANSPORT_MODES),
+    transportPreferences: z.array(z.enum(TRANSPORT_PREFERENCES)).default([]),
     interests: z.array(z.enum(TRIP_INTERESTS)).default([]),
     foodPreferences: z.array(z.enum(FOOD_PREFERENCES)).default([]),
     accessibilityNeeds: z.array(z.enum(ACCESSIBILITY_NEEDS)).default([]),

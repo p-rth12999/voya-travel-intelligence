@@ -5,9 +5,8 @@ import { useRouter } from 'next/navigation'
 import { X } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { Trip } from '@/types/trip'
-import { CURRENCIES, TRANSPORT_MODES, TRIP_INTERESTS, FOOD_PREFERENCES, ACCESSIBILITY_NEEDS } from '@/lib/validations/trip'
-import { buildDestinationMeta } from '@/lib/geo/geocode'
-import DestinationsInput from '@/components/trips/DestinationsInput'
+import { CURRENCIES, TRANSPORT_PREFERENCES, TRIP_INTERESTS, FOOD_PREFERENCES, ACCESSIBILITY_NEEDS, DestinationCard } from '@/lib/validations/trip'
+import DestinationCardsInput from '@/components/trips/DestinationCardsInput'
 import TagSelector from '@/components/trips/TagSelector'
 
 export default function EditTripDialog({ trip, onClose }: { trip: Trip; onClose: () => void }) {
@@ -18,13 +17,27 @@ export default function EditTripDialog({ trip, onClose }: { trip: Trip; onClose:
 
   const [title, setTitle] = useState(trip.title)
   const [source, setSource] = useState(trip.source)
-  const [destinations, setDestinations] = useState<string[]>(trip.destinations)
+  const [destinations, setDestinations] = useState<DestinationCard[]>(
+    (trip.destination_meta || trip.destinations.map((d) => ({ destination: d }))).map((m) => ({
+      name: 'destination' in m ? m.destination : (m as { destination: string }).destination,
+      country: (m as { country?: string | null }).country ?? null,
+      countryCode: (m as { countryCode?: string | null }).countryCode ?? null,
+      lat: (m as { lat?: number | null }).lat ?? null,
+      lon: (m as { lon?: number | null }).lon ?? null,
+      note: (m as { note?: string | null }).note ?? '',
+      photoUrl: (m as { photoUrl?: string | null }).photoUrl ?? null,
+    }))
+  )
+  const [useExactDates, setUseExactDates] = useState(!!trip.start_date && !!trip.end_date)
   const [startDate, setStartDate] = useState(trip.start_date ?? '')
   const [endDate, setEndDate] = useState(trip.end_date ?? '')
+  const [durationDays, setDurationDays] = useState<number | ''>(trip.duration_days ?? '')
+  const [startTime, setStartTime] = useState(trip.start_time ?? '10:00')
+  const [endTime, setEndTime] = useState(trip.end_time ?? '19:00')
   const [travelers, setTravelers] = useState(trip.travelers)
   const [budget, setBudget] = useState(trip.budget)
   const [currency, setCurrency] = useState(trip.currency)
-  const [transportMode, setTransportMode] = useState(trip.transport_mode)
+  const [transportPreferences, setTransportPreferences] = useState<string[]>(trip.transport_preferences || [])
   const [interests, setInterests] = useState<string[]>(trip.interests)
   const [foodPreferences, setFoodPreferences] = useState<string[]>(trip.food_preferences)
   const [accessibilityNeeds, setAccessibilityNeeds] = useState<string[]>(trip.accessibility_needs)
@@ -37,26 +50,37 @@ export default function EditTripDialog({ trip, onClose }: { trip: Trip; onClose:
     setSaving(true)
     setError(null)
 
-    const [sourceMeta] = await buildDestinationMeta([source])
-    const destinationMeta = await buildDestinationMeta(destinations)
+    const isSingleDay = !useExactDates && durationDays === 1
 
     const { error: updateError } = await supabase
       .from('trips')
       .update({
         title,
         source,
-        destinations,
-        destination_meta: destinationMeta,
-        source_meta: sourceMeta,
-        start_date: startDate || null,
-        end_date: endDate || null,
+        destinations: destinations.map((d) => d.name),
+        destination_meta: destinations.map((d) => ({
+          destination: d.name,
+          country: d.country ?? null,
+          countryCode: d.countryCode ?? null,
+          lat: d.lat ?? null,
+          lon: d.lon ?? null,
+          note: d.note || null,
+          photoUrl: d.photoUrl ?? null,
+        })),
+        start_date: useExactDates ? startDate || null : null,
+        end_date: useExactDates ? endDate || null : null,
+        duration_days: useExactDates ? null : durationDays || null,
+        start_time: isSingleDay ? startTime || null : null,
+        end_time: isSingleDay ? endTime || null : null,
         travelers,
         budget,
         currency,
-        transport_mode: transportMode,
+        transport_preferences: transportPreferences,
         interests,
         food_preferences: foodPreferences,
         accessibility_needs: accessibilityNeeds,
+        ai_content: null,
+        ai_generated_at: null,
       })
       .eq('id', trip.id)
 
@@ -85,6 +109,9 @@ export default function EditTripDialog({ trip, onClose }: { trip: Trip; onClose:
           {error && (
             <div className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">{error}</div>
           )}
+          <p className="rounded-lg bg-amber-50 p-3 text-xs text-amber-700">
+            Saving changes will regenerate your AI trip plan the next time you open this trip.
+          </p>
 
           <div>
             <label className="mb-1 block text-sm font-medium text-gray-700">Trip title</label>
@@ -104,30 +131,78 @@ export default function EditTripDialog({ trip, onClose }: { trip: Trip; onClose:
             />
           </div>
 
-          <DestinationsInput value={destinations} onChange={setDestinations} />
+          <DestinationCardsInput value={destinations} onChange={setDestinations} />
 
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">Start date</label>
+          <div className="rounded-xl border border-gray-200 p-4">
+            <label className="mb-3 flex items-center gap-2 text-sm font-medium text-gray-700">
               <input
-                type="date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
+                type="checkbox"
+                checked={useExactDates}
+                onChange={(e) => setUseExactDates(e.target.checked)}
+                className="h-4 w-4 rounded border-gray-300"
               />
-            </div>
-            <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">End date</label>
-              <input
-                type="date"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
-              />
-            </div>
+              I know my exact travel dates
+            </label>
+
+            {useExactDates ? (
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-gray-700">Start date</label>
+                  <input
+                    type="date"
+                    value={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-gray-700">End date</label>
+                  <input
+                    type="date"
+                    value={endDate}
+                    onChange={(e) => setEndDate(e.target.value)}
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
+                  />
+                </div>
+              </div>
+            ) : (
+              <div>
+                <label className="mb-1 block text-sm font-medium text-gray-700">How many days?</label>
+                <input
+                  type="number"
+                  min={1}
+                  max={60}
+                  value={durationDays}
+                  onChange={(e) => setDurationDays(e.target.value ? Number(e.target.value) : '')}
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
+                />
+                {durationDays === 1 && (
+                  <div className="mt-3 grid grid-cols-2 gap-4 rounded-lg bg-blue-50/50 p-3">
+                    <div>
+                      <label className="mb-1 block text-sm font-medium text-gray-700">Start time</label>
+                      <input
+                        type="time"
+                        value={startTime}
+                        onChange={(e) => setStartTime(e.target.value)}
+                        className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
+                      />
+                    </div>
+                    <div>
+                      <label className="mb-1 block text-sm font-medium text-gray-700">End time</label>
+                      <input
+                        type="time"
+                        value={endTime}
+                        onChange={(e) => setEndTime(e.target.value)}
+                        className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
 
-          <div className="grid grid-cols-4 gap-4">
+          <div className="grid grid-cols-3 gap-4">
             <div>
               <label className="mb-1 block text-sm font-medium text-gray-700">Travelers</label>
               <input
@@ -158,18 +233,14 @@ export default function EditTripDialog({ trip, onClose }: { trip: Trip; onClose:
                 {CURRENCIES.map((c) => <option key={c} value={c}>{c}</option>)}
               </select>
             </div>
-            <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">Transport</label>
-              <select
-                value={transportMode}
-                onChange={(e) => setTransportMode(e.target.value)}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
-              >
-                {TRANSPORT_MODES.map((m) => <option key={m} value={m}>{m}</option>)}
-              </select>
-            </div>
           </div>
 
+          <TagSelector
+            selected={transportPreferences}
+            options={TRANSPORT_PREFERENCES}
+            label="Transport preferences"
+            onToggle={(v) => toggle(transportPreferences, setTransportPreferences, v)}
+          />
           <TagSelector
             selected={interests}
             options={TRIP_INTERESTS}

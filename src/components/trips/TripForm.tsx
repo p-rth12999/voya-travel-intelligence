@@ -11,7 +11,7 @@ import {
   TripFormValues,
   TRIP_INTERESTS,
   CURRENCIES,
-  TRANSPORT_MODES,
+  TRANSPORT_PREFERENCES,
   FOOD_PREFERENCES,
   ACCESSIBILITY_NEEDS,
 } from '@/lib/validations/trip'
@@ -20,7 +20,7 @@ import { buildDestinationMeta } from '@/lib/geo/geocode'
 import DestinationCardsInput from '@/components/trips/DestinationCardsInput'
 import TagSelector from '@/components/trips/TagSelector'
 
-type TagField = 'interests' | 'foodPreferences' | 'accessibilityNeeds'
+type TagField = 'interests' | 'foodPreferences' | 'accessibilityNeeds' | 'transportPreferences'
 const QUICK_DURATIONS = [1, 3, 5, 7]
 
 export default function TripForm() {
@@ -44,10 +44,12 @@ export default function TripForm() {
       startDate: '',
       endDate: '',
       durationDays: undefined,
+      startTime: '10:00',
+      endTime: '19:00',
       travelers: 1,
       budget: 0,
       currency: 'USD',
-      transportMode: 'Car',
+      transportPreferences: [],
       interests: [],
       foodPreferences: [],
       accessibilityNeeds: [],
@@ -58,6 +60,7 @@ export default function TripForm() {
   const searchParams = useSearchParams()
   const templateId = searchParams.get('template')
   const useExactDates = watch('useExactDates')
+  const durationDays = watch('durationDays')
 
   useEffect(() => {
     if (!templateId) return
@@ -86,7 +89,6 @@ export default function TripForm() {
           photoUrl: null,
         }))
       )
-      setValue('transportMode', template.transport_mode)
       setValue('interests', template.interests)
       if (template.duration_days_min) {
         setValue('durationDays', template.duration_days_min)
@@ -128,6 +130,8 @@ export default function TripForm() {
       photoUrl: d.photoUrl ?? null,
     }))
 
+    const isSingleDay = !data.useExactDates && data.durationDays === 1
+
     const { error } = await supabase.from('trips').insert({
       user_id: user.id,
       title: data.title,
@@ -139,10 +143,12 @@ export default function TripForm() {
       start_date: data.useExactDates ? data.startDate : null,
       end_date: data.useExactDates ? data.endDate : null,
       duration_days: data.useExactDates ? null : data.durationDays,
+      start_time: isSingleDay ? data.startTime || null : null,
+      end_time: isSingleDay ? data.endTime || null : null,
       travelers: data.travelers,
       budget: data.budget,
       currency: data.currency,
-      transport_mode: data.transportMode,
+      transport_preferences: data.transportPreferences,
       interests: data.interests,
       food_preferences: data.foodPreferences,
       accessibility_needs: data.accessibilityNeeds,
@@ -237,7 +243,7 @@ export default function TripForm() {
                   type="button"
                   onClick={() => setValue('durationDays', d, { shouldValidate: true })}
                   className={`rounded-full px-3.5 py-1.5 text-sm font-medium transition ${
-                    watch('durationDays') === d ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    durationDays === d ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
                 >
                   {d} day{d > 1 ? 's' : ''}
@@ -249,16 +255,38 @@ export default function TripForm() {
               type="number"
               min={1}
               max={60}
+              step={1}
               placeholder="Custom number of days"
               className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
             />
             {errors.durationDays && <p className="mt-1 text-sm text-red-600">{errors.durationDays.message}</p>}
             <p className="mt-1 text-xs text-gray-400">You can add exact dates later from the trip page.</p>
+
+            {durationDays === 1 && (
+              <div className="mt-3 grid grid-cols-2 gap-4 rounded-lg bg-blue-50/50 p-3">
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-gray-700">Start time</label>
+                  <input
+                    {...register('startTime')}
+                    type="time"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-gray-700">End time</label>
+                  <input
+                    {...register('endTime')}
+                    type="time"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
+                  />
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>
 
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-3 gap-4">
         <div>
           <label className="mb-1 block text-sm font-medium text-gray-700">Travelers</label>
           <input
@@ -290,19 +318,14 @@ export default function TripForm() {
             ))}
           </select>
         </div>
-        <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700">Transport</label>
-          <select
-            {...register('transportMode')}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
-          >
-            {TRANSPORT_MODES.map((m) => (
-              <option key={m} value={m}>{m}</option>
-            ))}
-          </select>
-        </div>
       </div>
 
+      <TagSelector
+        selected={watch('transportPreferences') || []}
+        options={TRANSPORT_PREFERENCES}
+        label="Transport preferences (optional)"
+        onToggle={(v) => toggleTag('transportPreferences', v)}
+      />
       <TagSelector
         selected={watch('interests') || []}
         options={TRIP_INTERESTS}

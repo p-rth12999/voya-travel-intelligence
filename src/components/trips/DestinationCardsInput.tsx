@@ -5,7 +5,7 @@ import { MapPin, Plus, X, Loader2, Search } from 'lucide-react'
 import { fetchUnsplashPhoto } from '@/lib/unsplash'
 import { DestinationCard } from '@/lib/validations/trip'
 
-type GeoResult = { name: string; latitude: number; longitude: number; country?: string; country_code?: string; admin1?: string }
+type GeoResult = { name: string; latitude: number | null; longitude: number | null; country?: string; country_code?: string; admin1?: string }
 
 export default function DestinationCardsInput({
   value,
@@ -64,8 +64,8 @@ export default function DestinationCardsInput({
         name: pending.name,
         country: pending.country ?? null,
         countryCode: pending.country_code ?? null,
-        lat: pending.latitude,
-        lon: pending.longitude,
+        lat: pending.latitude ?? null,
+        lon: pending.longitude ?? null,
         note,
         photoUrl,
       },
@@ -130,6 +130,15 @@ export default function DestinationCardsInput({
                 </li>
               ))}
             </ul>
+          )}
+          {query.trim().length >= 2 && results.length === 0 && (
+            <button
+              type="button"
+              onClick={() => pickResult({ name: query, latitude: null, longitude: null })}
+              className="mt-2 text-sm text-blue-600 hover:underline"
+            >
+              Can&apos;t find it? Add &quot;{query}&quot; anyway
+            </button>
           )}
         </div>
       ) : (

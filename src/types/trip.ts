@@ -23,10 +23,12 @@ export interface Trip {
   start_date: string | null
   end_date: string | null
   duration_days: number | null
+  start_time: string | null
+  end_time: string | null
   travelers: number
   budget: number
   currency: string
-  transport_mode: string
+  transport_preferences: string[]
   interests: string[]
   food_preferences: string[]
   accessibility_needs: string[]
