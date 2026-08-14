@@ -9,7 +9,11 @@ import { Trip } from '@/types/trip'
 export default function TripCalendar({ trips }: { trips: Trip[] }) {
   const [selected, setSelected] = useState<Date | undefined>(new Date())
 
-  const tripDays = trips.flatMap((t) => {
+  const datedTrips = trips.filter(
+    (t): t is Trip & { start_date: string; end_date: string } => t.start_date !== null && t.end_date !== null
+  )
+
+  const tripDays = datedTrips.flatMap((t) => {
     const days: { date: Date; trip: Trip }[] = []
     const start = new Date(t.start_date)
     const end = new Date(t.end_date)

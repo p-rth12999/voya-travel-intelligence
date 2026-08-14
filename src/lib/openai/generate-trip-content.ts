@@ -18,6 +18,14 @@ The traveler has already completed part of this plan. Already-done activities (d
     ? "The destinations below are not necessarily in a good order — determine the most practical order yourself based on real-world geography and transport connectivity, and generate the timeline and journeyPlan in that optimized order."
     : "The destinations below are in the exact order the traveler wants — do not reorder them, but still flag in journeyPlan if any specific leg lacks a practical direct transport option, and note a realistic alternative in that leg's note field."
 
+  const hasExactDates = !!trip.start_date && !!trip.end_date
+  const dateContext = hasExactDates
+    ? `Dates: ${trip.start_date} to ${trip.end_date}`
+    : `Trip length: ${trip.duration_days ?? 'unspecified'} day(s). Exact calendar dates are not set yet.`
+  const timelineDateInstruction = hasExactDates
+    ? 'Each timeline day\'s "date" field should be the actual calendar date.'
+    : 'Exact calendar dates are not known yet, so each timeline day\'s "date" field should be a relative label like "Day 1", "Day 2", etc. instead of a real calendar date.'
+
   const completion = await openai.chat.completions.parse({
     model: 'openai/gpt-4o-mini',
     max_tokens: 4000,
@@ -28,7 +36,7 @@ The traveler has already completed part of this plan. Already-done activities (d
         content: `Generate a complete travel plan for this trip:
 Journey: ${trip.source} → ${trip.destinations.join(' → ')}
 Title: ${trip.title}
-Dates: ${trip.start_date} to ${trip.end_date}
+${dateContext}
 Travelers: ${trip.travelers}
 Budget: ${trip.budget} ${trip.currency}
 Mode of transport: ${trip.transport_mode}
@@ -37,6 +45,7 @@ Food preferences/restrictions: ${trip.food_preferences.join(', ') || 'None speci
 Accessibility needs: ${trip.accessibility_needs.join(', ') || 'None specified'}${progressNote}
 This is ONE continuous multi-leg journey, not separate trips. Keep origin-dependent context (visa status, embassy references, home currency) fixed throughout regardless of which leg is being discussed.
 First, determine tripType: "domestic" if every stop is in the same country as ${trip.source}, "international" otherwise.
+${timelineDateInstruction}
 Sequencing: ${sequencingNote}
 For journeyPlan: produce one leg per consecutive stop, starting from ${trip.source} to the first destination. For each leg, pick the most realistic real-world transport mode based on actual connectivity between those specific places — do not assume a direct route exists just because it looks geographically close; if there's no practical direct option (e.g. no suitable flight connection), name a sensible connecting hub or alternate mode in the note instead. Give a realistic estimatedTravelTime (e.g. "~3-4 hrs by car", "~1.5 hr flight plus transfers") reasoned from general knowledge, not live data. For each leg, include 1-2 genuine hidden gems near that specific leg's destination if any good ones exist (small, lesser-known, real places only — do not invent names) — across the whole journeyPlan there should be at least 3 hidden gems total where the destinations reasonably support it. Set journeyPlan.optimized to true only if you changed the input order.
 Restaurant recommendations must strictly respect food preferences. Timeline, activities, and medical recommendations must account for accessibility needs.

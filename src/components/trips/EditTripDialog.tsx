@@ -19,8 +19,8 @@ export default function EditTripDialog({ trip, onClose }: { trip: Trip; onClose:
   const [title, setTitle] = useState(trip.title)
   const [source, setSource] = useState(trip.source)
   const [destinations, setDestinations] = useState<string[]>(trip.destinations)
-  const [startDate, setStartDate] = useState(trip.start_date)
-  const [endDate, setEndDate] = useState(trip.end_date)
+  const [startDate, setStartDate] = useState(trip.start_date ?? '')
+  const [endDate, setEndDate] = useState(trip.end_date ?? '')
   const [travelers, setTravelers] = useState(trip.travelers)
   const [budget, setBudget] = useState(trip.budget)
   const [currency, setCurrency] = useState(trip.currency)
@@ -48,8 +48,8 @@ export default function EditTripDialog({ trip, onClose }: { trip: Trip; onClose:
         destinations,
         destination_meta: destinationMeta,
         source_meta: sourceMeta,
-        start_date: startDate,
-        end_date: endDate,
+        start_date: startDate || null,
+        end_date: endDate || null,
         travelers,
         budget,
         currency,

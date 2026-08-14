@@ -22,6 +22,13 @@ export function buildOfflineHtml(trip: Trip, content: TripAIContent): string {
     .map((item) => `<li><strong>${item.name}</strong> (${item.type.replace('_', ' ')}): ${item.detail}</li>`)
     .join('')
 
+  const dateLabel =
+    trip.start_date && trip.end_date
+      ? `${trip.start_date} to ${trip.end_date}`
+      : trip.duration_days
+      ? `${trip.duration_days} day${trip.duration_days > 1 ? 's' : ''} (dates not set)`
+      : 'Dates not set'
+
   return `<!DOCTYPE html>
 <html><head><meta charset="utf-8"><title>${trip.title} — Offline Plan</title>
 <style>
@@ -34,7 +41,7 @@ export function buildOfflineHtml(trip: Trip, content: TripAIContent): string {
 <body>
   <h1>${trip.title}</h1>
   <p class="meta">${trip.source} → ${trip.destinations.join(' → ')}<br>
-  ${trip.start_date} to ${trip.end_date} · ${trip.travelers} traveler(s) · ${trip.budget} ${trip.currency}</p>
+  ${dateLabel} · ${trip.travelers} traveler(s) · ${trip.budget} ${trip.currency}</p>
 
   <h2>Itinerary</h2>
   ${timelineHtml}

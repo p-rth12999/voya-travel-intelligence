@@ -13,6 +13,7 @@ const REFRESH_INTERVAL_MS = 3 * 60 * 60 * 1000
 export async function refreshLiveIntelligenceIfNeeded(trip: Trip) {
   const status = computeDisplayStatus(trip)
   if (status !== 'upcoming') return
+  if (!trip.start_date || !trip.end_date) return
 
   if (trip.live_intelligence_refreshed_at) {
     const last = new Date(trip.live_intelligence_refreshed_at).getTime()
@@ -37,7 +38,7 @@ export async function refreshLiveIntelligenceIfNeeded(trip: Trip) {
 Current weather data: ${weather ? `${weather.location}: ${weather.forecast}` : 'No forecast available yet (trip is too far out).'}
 Current plan (only patch sections that need updating): ${JSON.stringify(trip.ai_content)}
 
-Assess trip Assess trip health and provide patches only for weather, packingChecklist, timeline, crowdIntelligence, localRegulations, mobilityIntelligence, or accommodationIntelligence sections that genuinely need to change based on the current weather data.health and provide patches only for weather, packingChecklist, timeline, crowdIntelligence, or localRegulations sections that genuinely need to change based on the current weather data.`,
+Assess trip health and provide patches only for weather, packingChecklist, timeline, crowdIntelligence, localRegulations, mobilityIntelligence, or accommodationIntelligence sections that genuinely need to change based on the current weather data.`,
         },
       ],
       response_format: zodResponseFormat(liveIntelligenceResponseSchema, 'live_intelligence'),
