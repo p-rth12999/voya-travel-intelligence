@@ -9,12 +9,19 @@ import TripUpdateBanner from '@/components/trips/TripUpdateBanner'
 import { TripHealth } from '@/lib/validations/trip-live-intelligence'
 
 const STATUS_STYLES = {
+  draft: 'bg-purple-600/80',
   planning: 'bg-gray-900/70',
   upcoming: 'bg-blue-600/90',
   completed: 'bg-green-600/90',
   cancelled: 'bg-red-600/90',
 }
-const STATUS_LABELS = { planning: 'Planning', upcoming: 'Upcoming', completed: 'Completed', cancelled: 'Cancelled' }
+const STATUS_LABELS = { draft: 'Draft', planning: 'Planning', upcoming: 'Upcoming', completed: 'Completed', cancelled: 'Cancelled' }
+
+function formatTripDates(trip: Trip): string {
+  if (trip.start_date && trip.end_date) return `${trip.start_date} – ${trip.end_date}`
+  if (trip.duration_days) return `${trip.duration_days} day${trip.duration_days > 1 ? 's' : ''} · dates not set`
+  return 'Dates not set'
+}
 
 export default function TripHeroHeader({
   trip,
@@ -30,6 +37,7 @@ export default function TripHeroHeader({
   const status = computeDisplayStatus(trip)
   const hero = getTripHeroImage(trip.id, 1920, 700)
   const hasOverlayContent = health || updateSummary
+  const dateLabel = formatTripDates(trip)
 
   return (
     <div className="mb-6">
@@ -52,7 +60,7 @@ export default function TripHeroHeader({
           <h1 className="text-2xl font-semibold drop-shadow sm:text-4xl">{trip.title}</h1>
           <p className="mt-1 text-sm text-white/85 drop-shadow sm:text-base">{trip.source} → {trip.destinations.join(' → ')}</p>
           <p className="mt-1 text-xs text-white/70 drop-shadow sm:text-sm">
-            {trip.start_date} – {trip.end_date} · {trip.travelers} traveler{trip.travelers > 1 ? 's' : ''} · {trip.budget} {trip.currency}
+            {dateLabel} · {trip.travelers} traveler{trip.travelers > 1 ? 's' : ''} · {trip.budget} {trip.currency}
           </p>
         </div>
       </div>
@@ -77,7 +85,7 @@ export default function TripHeroHeader({
         <h1 className="text-2xl font-semibold text-gray-900">{trip.title}</h1>
         <p className="text-sm text-gray-500">{trip.source} → {trip.destinations.join(' → ')}</p>
         <p className="text-xs text-gray-400">
-          {trip.start_date} – {trip.end_date} · {trip.travelers} traveler(s) · {trip.budget} {trip.currency}
+          {dateLabel} · {trip.travelers} traveler(s) · {trip.budget} {trip.currency}
         </p>
       </div>
     </div>
