@@ -25,20 +25,19 @@ export async function middleware(request: NextRequest) {
     }
   )
 
-  // Refreshes the session if expired — required for Server Components
   const { data: { user } } = await supabase.auth.getUser()
 
-  // Protect the dashboard and trips routes: redirect to /login if not signed in
- if (
-  !user &&
-  (request.nextUrl.pathname.startsWith('/dashboard') ||
-    request.nextUrl.pathname.startsWith('/trips') ||
-    request.nextUrl.pathname.startsWith('/calendar') ||
-    request.nextUrl.pathname.startsWith('/alerts') ||
-    request.nextUrl.pathname.startsWith('/explore') ||
-    request.nextUrl.pathname.startsWith('/profile') ||
-    request.nextUrl.pathname.startsWith('/settings'))
-) {
+  if (
+    !user &&
+    (request.nextUrl.pathname.startsWith('/dashboard') ||
+      request.nextUrl.pathname.startsWith('/trips') ||
+      request.nextUrl.pathname.startsWith('/calendar') ||
+      request.nextUrl.pathname.startsWith('/alerts') ||
+      request.nextUrl.pathname.startsWith('/explore') ||
+      request.nextUrl.pathname.startsWith('/profile') ||
+      request.nextUrl.pathname.startsWith('/settings') ||
+      request.nextUrl.pathname.startsWith('/templates'))
+  ) {
     const url = request.nextUrl.clone()
     url.pathname = '/login'
     return NextResponse.redirect(url)

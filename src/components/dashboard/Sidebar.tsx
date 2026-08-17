@@ -3,11 +3,12 @@
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import { LayoutDashboard, Map, Calendar, Bell, Compass, Settings, LogOut, User, Menu, X } from 'lucide-react'
+import { LayoutDashboard, Map, Calendar, Bell, Compass, Settings, LogOut, User, Menu, X, Sparkles } from 'lucide-react'
 import Logo from '@/components/shared/Logo'
 import { createClient } from '@/lib/supabase/client'
 
 const NAV_ITEMS = [
+  { icon: Sparkles, label: 'Create with AI', href: '/templates/new' },
   { icon: LayoutDashboard, label: 'Dashboard', href: '/dashboard' },
   { icon: Map, label: 'Trips', href: '/dashboard' },
   { icon: Calendar, label: 'Calendar', href: '/calendar' },
