@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels'
+import { Panel, Group as PanelGroup, Separator as PanelResizeHandle } from 'react-resizable-panels'
 import Sidebar from '@/components/dashboard/Sidebar'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
@@ -216,7 +216,7 @@ export default function TemplateMakerPage() {
 
       {/* Desktop: resizable split-screen */}
       <div className="hidden flex-1 lg:flex">
-        <PanelGroup direction="horizontal" className="h-full">
+        <PanelGroup orientation="horizontal" className="h-full">
           <Panel defaultSize={70} minSize={45}>
             <TemplateChatColumn
               messages={messages}
