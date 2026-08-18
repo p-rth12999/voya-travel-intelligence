@@ -2,10 +2,12 @@
 
 import { RefObject } from 'react'
 import { Send, Sparkles, Loader2, RotateCcw } from 'lucide-react'
+import StartLocationBox, { ResolvedLocation } from './StartLocationBox'
 
 type ChatMessage = {
   role: 'user' | 'assistant'
   content: string
+  suggestions?: string[]
 }
 
 type Props = {
@@ -14,25 +16,40 @@ type Props = {
   input: string
   setInput: (v: string) => void
   onSend: () => void
+  onSuggestionClick: (text: string) => void
   onStartOver: () => void
   scrollRef: RefObject<HTMLDivElement | null>
+  startLocation: ResolvedLocation | null
+  onLocationChange: (loc: ResolvedLocation | null) => void
 }
 
-export default function TemplateChatColumn({ messages, loading, input, setInput, onSend, onStartOver, scrollRef }: Props) {
+export default function TemplateChatColumn({
+  messages,
+  loading,
+  input,
+  setInput,
+  onSend,
+  onSuggestionClick,
+  onStartOver,
+  scrollRef,
+  startLocation,
+  onLocationChange,
+}: Props) {
   const hasStarted = messages.length > 0
 
   return (
     <div className="flex h-full flex-col">
-      {hasStarted && (
-        <div className="flex justify-end px-4 pt-4 lg:px-10">
+      <div className="flex items-center justify-between gap-3 px-4 pt-4 lg:px-10">
+        <StartLocationBox location={startLocation} onChange={onLocationChange} />
+        {hasStarted && (
           <button
             onClick={onStartOver}
-            className="flex items-center gap-1.5 rounded-full border border-white/15 px-3 py-1 text-xs text-blue-100/60 transition hover:bg-white/5 hover:text-white"
+            className="flex shrink-0 items-center gap-1.5 rounded-full border border-white/15 px-3 py-1 text-xs text-blue-100/60 transition hover:bg-white/5 hover:text-white"
           >
             <RotateCcw className="h-3 w-3" /> Start Over
           </button>
-        </div>
-      )}
+        )}
+      </div>
 
       <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-8 lg:px-10">
         {!hasStarted ? (
@@ -48,7 +65,7 @@ export default function TemplateChatColumn({ messages, loading, input, setInput,
         ) : (
           <div className="mx-auto flex max-w-2xl flex-col gap-4">
             {messages.map((m, i) => (
-              <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+              <div key={i} className={`flex flex-col ${m.role === 'user' ? 'items-end' : 'items-start'}`}>
                 <div
                   className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-sm ${
                     m.role === 'user' ? 'bg-blue-600 text-white' : 'bg-white/10 text-blue-50'
@@ -56,6 +73,19 @@ export default function TemplateChatColumn({ messages, loading, input, setInput,
                 >
                   {m.content}
                 </div>
+                {m.role === 'assistant' && m.suggestions && m.suggestions.length > 0 && (
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {m.suggestions.map((s) => (
+                      <button
+                        key={s}
+                        onClick={() => onSuggestionClick(s)}
+                        className="rounded-full border border-blue-400/40 bg-blue-500/10 px-3 py-1.5 text-xs text-blue-100 transition hover:bg-blue-500/20"
+                      >
+                        {s}
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
             ))}
             {loading && (
@@ -78,6 +108,7 @@ export default function TemplateChatColumn({ messages, loading, input, setInput,
             placeholder="Describe your trip idea..."
             disabled={loading}
             className="flex-1 bg-transparent text-sm text-white placeholder:text-blue-100/40 focus:outline-none"
+            style={{ color: '#ffffff', colorScheme: 'dark' }}
           />
           <button
             onClick={onSend}

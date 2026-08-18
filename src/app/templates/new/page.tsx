@@ -9,10 +9,12 @@ import { TemplateDraft } from '@/lib/validations/template-draft-ai'
 import { buildDestinationMeta } from '@/lib/geo/geocode'
 import TemplateChatColumn from '@/components/templates/TemplateChatColumn'
 import TemplateDraftPanel from '@/components/templates/TemplateDraftPanel'
+import { ResolvedLocation } from '@/components/templates/StartLocationBox'
 
 type ChatMessage = {
   role: 'user' | 'assistant'
   content: string
+  suggestions?: string[]
 }
 
 type SavedState = {
@@ -20,6 +22,7 @@ type SavedState = {
   draft: TemplateDraft
   questionsAsked: number
   readyToCreate: boolean
+  startLocation: ResolvedLocation | null
 }
 
 const EMPTY_DRAFT: TemplateDraft = {
@@ -60,6 +63,7 @@ export default function TemplateMakerPage() {
   const [loading, setLoading] = useState(false)
   const [questionsAsked, setQuestionsAsked] = useState<number>(() => loadSaved()?.questionsAsked || 0)
   const [readyToCreate, setReadyToCreate] = useState<boolean>(() => loadSaved()?.readyToCreate || false)
+  const [startLocation, setStartLocation] = useState<ResolvedLocation | null>(() => loadSaved()?.startLocation || null)
   const [creating, setCreating] = useState(false)
   const scrollRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
@@ -68,11 +72,11 @@ export default function TemplateMakerPage() {
   useEffect(() => {
     if (messages.length === 0) return
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({ messages, draft, questionsAsked, readyToCreate }))
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ messages, draft, questionsAsked, readyToCreate, startLocation }))
     } catch {
       // storage full or unavailable — not critical, fail silently
     }
-  }, [messages, draft, questionsAsked, readyToCreate])
+  }, [messages, draft, questionsAsked, readyToCreate, startLocation])
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' })
@@ -85,13 +89,14 @@ export default function TemplateMakerPage() {
     setQuestionsAsked(0)
     setReadyToCreate(false)
     setInput('')
+    // startLocation intentionally preserved — that's about where you are, not the conversation
   }
 
-  async function handleSend() {
-    const text = input.trim()
+  async function handleSend(overrideText?: string) {
+    const text = (overrideText ?? input).trim()
     if (!text || loading) return
 
-    setInput('')
+    if (!overrideText) setInput('')
     setMessages((prev) => [...prev, { role: 'user', content: text }])
     setLoading(true)
 
@@ -104,6 +109,7 @@ export default function TemplateMakerPage() {
           latestMessage: text,
           questionsAsked,
           recentHistory: messages,
+          startLocation,
         }),
       })
 
@@ -115,16 +121,20 @@ export default function TemplateMakerPage() {
 
       if (data.clarifyingQuestion) {
         setQuestionsAsked((prev) => prev + 1)
-        setMessages((prev) => [...prev, { role: 'assistant', content: data.clarifyingQuestion }])
+        setMessages((prev) => [...prev, { role: 'assistant', content: data.clarifyingQuestion, suggestions: data.destinationSuggestions }])
       } else if (data.readyToCreate) {
         setMessages((prev) => [
           ...prev,
-          { role: 'assistant', content: "I've got what I need — take a look at the draft and hit Create Template when you're ready, or keep chatting to refine it." },
+          {
+            role: 'assistant',
+            content: "I've got what I need — take a look at the draft and hit Create Template when you're ready, or keep chatting to refine it.",
+            suggestions: data.destinationSuggestions,
+          },
         ])
       } else {
         setMessages((prev) => [
           ...prev,
-          { role: 'assistant', content: 'Got it — tell me more, or ask me to adjust anything.' },
+          { role: 'assistant', content: 'Got it — tell me more, or ask me to adjust anything.', suggestions: data.destinationSuggestions },
         ])
       }
     } catch {
@@ -204,9 +214,12 @@ export default function TemplateMakerPage() {
             loading={loading}
             input={input}
             setInput={setInput}
-            onSend={handleSend}
+            onSend={() => handleSend()}
+            onSuggestionClick={(s) => handleSend(s)}
             onStartOver={handleStartOver}
             scrollRef={scrollRef}
+            startLocation={startLocation}
+            onLocationChange={setStartLocation}
           />
         </div>
         <div className="border-t border-white/10">
@@ -217,19 +230,22 @@ export default function TemplateMakerPage() {
       {/* Desktop: resizable split-screen */}
       <div className="hidden flex-1 lg:flex">
         <PanelGroup orientation="horizontal" className="h-full">
-          <Panel defaultSize={70} minSize={45}>
+          <Panel defaultSize="70%" minSize="45%">
             <TemplateChatColumn
               messages={messages}
               loading={loading}
               input={input}
               setInput={setInput}
-              onSend={handleSend}
+              onSend={() => handleSend()}
+              onSuggestionClick={(s) => handleSend(s)}
               onStartOver={handleStartOver}
               scrollRef={scrollRef}
+              startLocation={startLocation}
+              onLocationChange={setStartLocation}
             />
           </Panel>
           <PanelResizeHandle className="w-1 bg-white/10 transition hover:bg-blue-500/50 active:bg-blue-500" />
-          <Panel defaultSize={30} minSize={22} maxSize={45}>
+          <Panel defaultSize="30%" minSize="22%" maxSize="45%">
             <TemplateDraftPanel draft={draft} readyToCreate={readyToCreate} creating={creating} onCreate={handleCreate} />
           </Panel>
         </PanelGroup>
