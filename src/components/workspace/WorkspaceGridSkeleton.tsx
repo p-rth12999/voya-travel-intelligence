@@ -1,4 +1,4 @@
-import { Loader2 } from 'lucide-react'
+import CompassSpinner from '@/components/shared/CompassSpinner'
 
 export default function WorkspaceGridSkeleton({ status }: { status: 'loading' | 'error' }) {
   if (status === 'error') {
@@ -11,7 +11,7 @@ export default function WorkspaceGridSkeleton({ status }: { status: 'loading' | 
   return (
     <div>
       <div className="mb-4 flex items-center gap-2 text-sm text-gray-500">
-        <Loader2 className="h-4 w-4 animate-spin" /> Generating your AI trip plan...
+        <CompassSpinner className="h-4 w-4" /> Generating your AI trip plan...
       </div>
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {Array.from({ length: 10 }).map((_, i) => (

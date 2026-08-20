@@ -1,14 +1,15 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState,useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { MessageCircle, Send, X } from 'lucide-react'
+import { useChatPanel } from '@/components/workspace/ChatPanelContext'
 
 interface ChatMessage { role: 'user' | 'assistant'; content: string }
 
 export default function AIChatCard({ tripId }: { tripId: string }) {
   const router = useRouter()
-  const [isOpen, setIsOpen] = useState(false)
+  const { isOpen, setIsOpen } = useChatPanel()
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [input, setInput] = useState('')
   const [isStreaming, setIsStreaming] = useState(false)
@@ -50,7 +51,7 @@ export default function AIChatCard({ tripId }: { tripId: string }) {
           return updated
         })
       }
-            if (updatedCards) router.refresh()
+      if (updatedCards) router.refresh()
     } catch {
       setMessages((prev) => {
         const updated = [...prev]

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Loader2 } from 'lucide-react'
+import CompassSpinner from '@/components/shared/CompassSpinner'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -350,7 +350,7 @@ export default function TripForm() {
         disabled={isSubmitting}
         className="flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 py-2.5 font-medium text-white transition hover:bg-blue-700 disabled:opacity-50"
       >
-        {isSubmitting && <Loader2 className="h-4 w-4 animate-spin" />} {isSubmitting ? 'Creating...' : 'Create Trip'}
+                {isSubmitting && <CompassSpinner className="h-4 w-4" />} {isSubmitting ? 'Creating...' : 'Create Trip'}
       </button>
     </form>
   )

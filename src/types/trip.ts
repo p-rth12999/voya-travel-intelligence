@@ -15,6 +15,7 @@ export interface Trip {
   id: string
   user_id: string
   title: string
+  description: string | null
   source: string
   destinations: string[]
   destination_meta: DestinationMeta[] | null

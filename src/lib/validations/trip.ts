@@ -63,6 +63,7 @@ export const destinationCardSchema = z.object({
 export const tripFormSchema = z
   .object({
     title: z.string().min(3, 'Title must be at least 3 characters').max(80, 'Title must be under 80 characters'),
+    description: z.string().max(500, 'Keep it under 500 characters').optional().default(''),
     source: z.string().min(2, 'Starting location is required'),
     destinations: z.array(destinationCardSchema).min(1, 'At least one destination is required'),
     useExactDates: z.boolean().default(false),
