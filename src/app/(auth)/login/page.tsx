@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import Logo from '@/components/shared/Logo'
-import { Loader2 } from 'lucide-react'
+import CompassSpinner from '@/components/shared/CompassSpinner'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -129,7 +129,7 @@ export default function LoginPage() {
   disabled={loading}
   className="flex w-full items-center justify-center gap-2 rounded-full bg-blue-600 py-2.5 font-medium text-white transition hover:bg-blue-700 disabled:opacity-50"
 >
-  {loading && <Loader2 className="h-4 w-4 animate-spin" />}
+    {loading && <CompassSpinner className="h-4 w-4" />}
   {loading ? 'Please wait...' : mode === 'signup' ? 'Sign up' : mode === 'forgot' ? 'Send reset link' : 'Sign In'}
 </button>
         </form>

@@ -1,7 +1,8 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
-import { Loader2, LocateFixed, MapPin } from 'lucide-react'
+import { LocateFixed, MapPin } from 'lucide-react'
+import CompassSpinner from '@/components/shared/CompassSpinner'
 import LocationSearch, { ResolvedLocation } from './LocationSearch'
 import TemplateCard, { TripTemplate } from './TemplateCard'
 import { haversineDistanceKm } from '@/lib/geo/distance'
@@ -148,13 +149,13 @@ export default function ExploreClient() {
 
       {status === 'locating' && (
         <div className="flex items-center gap-2 rounded-2xl border border-gray-200 bg-white/70 p-6 text-sm text-gray-500">
-          <Loader2 className="h-4 w-4 animate-spin" /> Finding your location...
-        </div>
+          <CompassSpinner className="h-4 w-4" /> Finding your location...  
+                </div>
       )}
 
       {status === 'generating' && (
         <div className="mb-5 flex items-center gap-2 rounded-2xl border border-blue-100 bg-blue-50/70 p-4 text-sm text-blue-700">
-          <Loader2 className="h-4 w-4 animate-spin" /> Generating trip ideas for this area...
+          <CompassSpinner className="h-4 w-4" /> Generating trip ideas for this area...
         </div>
       )}
 

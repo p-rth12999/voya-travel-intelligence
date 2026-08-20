@@ -75,14 +75,19 @@ export default function TemplateDraftPanel({ draft, readyToCreate, creating, onC
       </div>
 
       {readyToCreate && (
-        <button
-          onClick={onCreate}
-          disabled={creating}
-          className="mt-6 flex w-full items-center justify-center gap-2 rounded-full bg-blue-600 py-2.5 text-sm font-medium text-white transition hover:bg-blue-700 disabled:opacity-50"
-        >
-          {creating && <Loader2 className="h-4 w-4 animate-spin" />}
-          {creating ? 'Creating...' : 'Create Template'}
-        </button>
+        <div className="mt-6">
+          <button
+            onClick={onCreate}
+            disabled={creating}
+            className="flex w-full items-center justify-center gap-2 rounded-full bg-blue-600 py-2.5 text-sm font-medium text-white transition hover:bg-blue-700 disabled:opacity-50"
+          >
+            {creating && <Loader2 className="h-4 w-4 animate-spin" />}
+            {creating ? 'Creating...' : 'Create Template'}
+          </button>
+          <p className="mt-2 text-center text-xs text-blue-100/40">
+            Looks good any time — you can keep chatting to adjust it first.
+          </p>
+        </div>
       )}
     </div>
   )

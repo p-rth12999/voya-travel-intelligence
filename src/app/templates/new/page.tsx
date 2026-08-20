@@ -49,6 +49,10 @@ function loadSaved(): SavedState | null {
   }
 }
 
+function isDraftComplete(d: TemplateDraft): boolean {
+  return !!d.title && d.destinations.length > 0 && d.durationDaysMin !== null && d.interests.length > 0
+}
+
 function bucketForDuration(days: number): string {
   if (days <= 1) return '1_day'
   if (days <= 4) return '3_day'
@@ -63,6 +67,7 @@ export default function TemplateMakerPage() {
   const [loading, setLoading] = useState(false)
   const [questionsAsked, setQuestionsAsked] = useState<number>(() => loadSaved()?.questionsAsked || 0)
   const [readyToCreate, setReadyToCreate] = useState<boolean>(() => loadSaved()?.readyToCreate || false)
+  const canCreate = isDraftComplete(draft)
   const [startLocation, setStartLocation] = useState<ResolvedLocation | null>(() => loadSaved()?.startLocation || null)
   const [creating, setCreating] = useState(false)
   const scrollRef = useRef<HTMLDivElement>(null)
@@ -119,24 +124,14 @@ export default function TemplateMakerPage() {
       setDraft(data.draft)
       setReadyToCreate(data.readyToCreate)
 
-      if (data.clarifyingQuestion) {
+      if (data.askedQuestion) {
         setQuestionsAsked((prev) => prev + 1)
-        setMessages((prev) => [...prev, { role: 'assistant', content: data.clarifyingQuestion, suggestions: data.destinationSuggestions }])
-      } else if (data.readyToCreate) {
-        setMessages((prev) => [
-          ...prev,
-          {
-            role: 'assistant',
-            content: "I've got what I need — take a look at the draft and hit Create Template when you're ready, or keep chatting to refine it.",
-            suggestions: data.destinationSuggestions,
-          },
-        ])
-      } else {
-        setMessages((prev) => [
-          ...prev,
-          { role: 'assistant', content: 'Got it — tell me more, or ask me to adjust anything.', suggestions: data.destinationSuggestions },
-        ])
       }
+
+      setMessages((prev) => [
+        ...prev,
+        { role: 'assistant', content: data.message, suggestions: data.destinationSuggestions },
+      ])
     } catch {
       setMessages((prev) => [...prev, { role: 'assistant', content: 'Something went wrong on my end — mind trying that again?' }])
     } finally {
@@ -223,7 +218,7 @@ export default function TemplateMakerPage() {
           />
         </div>
         <div className="border-t border-white/10">
-          <TemplateDraftPanel draft={draft} readyToCreate={readyToCreate} creating={creating} onCreate={handleCreate} />
+          <TemplateDraftPanel draft={draft} readyToCreate={canCreate} creating={creating} onCreate={handleCreate} />
         </div>
       </div>
 
@@ -246,7 +241,7 @@ export default function TemplateMakerPage() {
           </Panel>
           <PanelResizeHandle className="w-1 bg-white/10 transition hover:bg-blue-500/50 active:bg-blue-500" />
           <Panel defaultSize="30%" minSize="22%" maxSize="45%">
-            <TemplateDraftPanel draft={draft} readyToCreate={readyToCreate} creating={creating} onCreate={handleCreate} />
+            <TemplateDraftPanel draft={draft} readyToCreate={canCreate} creating={creating} onCreate={handleCreate} />
           </Panel>
         </PanelGroup>
       </div>

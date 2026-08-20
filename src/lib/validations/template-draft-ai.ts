@@ -16,7 +16,8 @@ export const templateDraftSchema = z.object({
 
 export const templateChatResponseSchema = z.object({
   draft: templateDraftSchema,
-  clarifyingQuestion: z.string().nullable(),
+  message: z.string(),
+  askedQuestion: z.boolean(),
   destinationSuggestions: z.array(z.string()),
   readyToCreate: z.boolean(),
 })
