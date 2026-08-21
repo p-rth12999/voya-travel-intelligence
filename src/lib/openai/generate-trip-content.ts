@@ -45,6 +45,7 @@ The traveler has already completed part of this plan. Already-done activities (d
         content: `Generate a complete travel plan for this trip:
 Journey: ${trip.source} → ${trip.destinations.join(' → ')}
 Title: ${trip.title}
+${trip.description ? `Traveler's own description of this trip's purpose/vibe (weigh this throughout — pacing, focus areas, mood, tone): "${trip.description}"` : ''}
 ${dateContext}
 Travelers: ${trip.travelers}
 Budget: ${trip.budget} ${trip.currency}
