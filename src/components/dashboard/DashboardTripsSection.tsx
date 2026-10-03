@@ -48,7 +48,7 @@ export default function DashboardTripsSection({
 
   return (
     <div>
-      <h2 className="mb-3 text-lg font-semibold text-gray-900">Your Trips</h2>
+      <h2 className="mb-3 font-serif text-lg font-semibold text-navy-dark">Your Trips</h2>
       <TripFilters filter={filter} onFilterChange={setFilter} sort={sort} onSortChange={setSort} />
       {visibleTrips.length === 0 ? (
         <DashboardEmptyState />

@@ -25,8 +25,8 @@ export default function TripUpdateBanner({
     <div
       className={
         floating
-          ? 'rounded-3xl border border-blue-100 bg-blue-50/80 p-4 shadow-lg backdrop-blur-xl print:hidden'
-          : 'mb-6 rounded-3xl border border-blue-100 bg-blue-50/70 p-4 backdrop-blur print:hidden'
+          ? 'rounded-3xl border border-blue-100 bg-cream/90 p-4 shadow-lg backdrop-blur-xl print:hidden'
+          : 'mb-6 rounded-3xl border border-blue-100 bg-cream/80 p-4 backdrop-blur print:hidden'
       }
     >
       <button onClick={() => setExpanded(!expanded)} className="flex w-full items-center justify-between text-left">

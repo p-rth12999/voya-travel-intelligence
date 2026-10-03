@@ -20,16 +20,16 @@ export default function StatsRow({ stats }: { stats: ReturnType<typeof computeDa
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: i * 0.06 }}
-          className="rounded-2xl border border-white bg-white/80 p-4 shadow-sm backdrop-blur"
+          className="rounded-2xl border border-sand bg-cream/80 p-4 shadow-sm backdrop-blur"
         >
           <div className={`mb-2 flex h-8 w-8 items-center justify-center rounded-full ${card.color}`}>
             <card.icon className="h-4 w-4" />
           </div>
-          <p className="text-xl font-semibold text-gray-900">
+          <p className="font-serif text-xl font-semibold text-navy-dark">
             {card.display ?? <AnimatedCounter value={card.value} suffix={card.suffix} />}
           </p>
-          <p className="text-xs text-gray-500">{card.label}</p>
-          {card.sub && <p className="mt-0.5 text-xs text-green-600">{card.sub}</p>}
+          <p className="text-xs text-navy-dark/50">{card.label}</p>
+          {card.sub && <p className="mt-0.5 text-xs text-brass">{card.sub}</p>}
         </motion.div>
       ))}
     </div>

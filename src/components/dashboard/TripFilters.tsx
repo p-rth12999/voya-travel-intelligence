@@ -24,14 +24,14 @@ export default function TripFilters({
   onSortChange: (s: SortOption) => void
 }) {
   return (
-    <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-white bg-white/80 p-2 shadow-sm backdrop-blur">
+    <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-sand bg-cream/80 p-2 shadow-sm backdrop-blur">
       <div className="flex flex-wrap gap-1">
         {FILTERS.map((f) => (
           <button
             key={f.value}
             onClick={() => onFilterChange(f.value)}
             className={`rounded-full px-3 py-1.5 text-sm font-medium transition ${
-              filter === f.value ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-50'
+              filter === f.value ? 'bg-brass text-navy-dark' : 'text-navy-dark/60 hover:bg-sand/40'
             }`}
           >
             {f.label}
@@ -41,7 +41,7 @@ export default function TripFilters({
       <select
         value={sort}
         onChange={(e) => onSortChange(e.target.value as SortOption)}
-        className="rounded-full border border-gray-200 bg-white px-3 py-1.5 text-sm focus:border-blue-400 focus:outline-none"
+        className="rounded-full border border-sand bg-cream px-3 py-1.5 text-sm focus:border-brass focus:outline-none"
       >
         <option value="recent">Most Recent</option>
         <option value="oldest">Oldest</option>

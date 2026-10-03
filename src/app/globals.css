@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-indigo: #1f2a44;
-  --color-indigo-dark: #12182b;
+  --color-navy: #1f2a44;
+  --color-navy-dark: #12182b;
   --color-brass: #b08d57;
   --color-sand: #ede3d0;
   --color-cream: #faf6ee;

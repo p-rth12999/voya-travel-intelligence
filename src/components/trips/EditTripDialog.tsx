@@ -16,6 +16,7 @@ export default function EditTripDialog({ trip, onClose }: { trip: Trip; onClose:
   const [error, setError] = useState<string | null>(null)
 
   const [title, setTitle] = useState(trip.title)
+  const [description, setDescription] = useState(trip.description ?? '')
   const [source, setSource] = useState(trip.source)
   const [destinations, setDestinations] = useState<DestinationCard[]>(
     (trip.destination_meta || trip.destinations.map((d) => ({ destination: d }))).map((m) => ({
@@ -56,6 +57,7 @@ export default function EditTripDialog({ trip, onClose }: { trip: Trip; onClose:
       .from('trips')
       .update({
         title,
+        description: description || null,
         source,
         destinations: destinations.map((d) => d.name),
         destination_meta: destinations.map((d) => ({
@@ -118,6 +120,17 @@ export default function EditTripDialog({ trip, onClose }: { trip: Trip; onClose:
             <input
               value={title}
               onChange={(e) => setTitle(e.target.value)}
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
+            />
+          </div>
+
+          <div>
+            <label className="mb-1 block text-sm font-medium text-gray-700">Trip description (optional)</label>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              rows={2}
+              placeholder="e.g. This is a business trip — plan some on-the-go food spots and keep pacing light"
               className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
             />
           </div>

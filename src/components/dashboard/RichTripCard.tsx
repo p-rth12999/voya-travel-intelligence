@@ -10,15 +10,7 @@ import { computeDisplayStatus } from '@/lib/trip-status'
 import { getTripHeroImage } from '@/lib/trip-hero-image'
 import { createClient } from '@/lib/supabase/client'
 import ConfirmDialog from '@/components/shared/ConfirmDialog'
-
-const STATUS_STYLES = {
-  draft: 'bg-purple-600/80 text-white',
-  planning: 'bg-gray-900/70 text-white',
-  upcoming: 'bg-blue-600/90 text-white',
-  completed: 'bg-green-600/90 text-white',
-  cancelled: 'bg-red-600/90 text-white',
-}
-const STATUS_LABELS = { draft: 'Draft', planning: 'Planning', upcoming: 'Upcoming', completed: 'Completed', cancelled: 'Cancelled' }
+import { STATUS_STYLES, STATUS_LABELS } from '@/lib/trip-status-styles'
 
 function healthPillStyle(score: number) {
   if (score >= 90) return 'bg-green-500/90 text-white'
@@ -66,7 +58,7 @@ export default function RichTripCard({ trip, avgRating }: { trip: Trip; avgRatin
 
       <Link
         href={`/trips/${trip.id}`}
-        className="group block overflow-hidden rounded-3xl border border-white bg-white shadow-sm transition-shadow duration-300 hover:shadow-2xl"
+        className="group block overflow-hidden rounded-3xl border border-sand bg-cream shadow-sm transition-shadow duration-300 hover:shadow-2xl"
       >
         <div className="relative h-40 w-full overflow-hidden">
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -87,29 +79,29 @@ export default function RichTripCard({ trip, avgRating }: { trip: Trip; avgRatin
           )}
 
           <div className="absolute bottom-3 left-4 right-4 text-white">
-            <h3 className="text-sm font-semibold drop-shadow">{trip.title}</h3>
+            <h3 className="font-serif text-sm font-semibold drop-shadow">{trip.title}</h3>
             <p className="text-xs text-white/80 drop-shadow">{trip.source} → {trip.destinations.join(' → ')}</p>
           </div>
         </div>
 
         <div className="p-4">
-          <p className="text-xs text-gray-400">
+          <p className="text-xs text-navy-dark/40">
             {trip.start_date && trip.end_date
               ? `${trip.start_date} – ${trip.end_date}`
               : trip.duration_days
-              ? `${trip.duration_days} day${trip.duration_days > 1 ? 's' : ''} \u2014 dates not set`
+              ? `${trip.duration_days} day${trip.duration_days > 1 ? 's' : ''} — dates not set`
               : 'Dates not set'}
           </p>
 
           {status === 'completed' && avgRating !== null && (
             <div className="mt-2 flex items-center gap-0.5">
               {[1, 2, 3, 4, 5].map((n) => (
-                <Star key={n} className={`h-3.5 w-3.5 ${n <= Math.round(avgRating) ? 'fill-amber-400 text-amber-400' : 'text-gray-200'}`} />
+                <Star key={n} className={`h-3.5 w-3.5 ${n <= Math.round(avgRating) ? 'fill-amber-400 text-amber-400' : 'text-sand'}`} />
               ))}
             </div>
           )}
 
-          <div className="mt-3 flex items-center gap-3 border-t border-gray-100 pt-2 text-gray-400">
+          <div className="mt-3 flex items-center gap-3 border-t border-sand pt-2 text-navy-dark/40">
             {trip.ai_content !== null && (
               <span className="flex items-center gap-1 text-xs" title="AI plan ready">
                 <Sparkles className="h-3 w-3" /> AI Ready

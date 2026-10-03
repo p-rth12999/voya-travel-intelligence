@@ -130,27 +130,27 @@ export default function ExploreClient() {
     <div>
       <div className="mb-2 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <LocationSearch onSelect={handleManualSelect} />
-        <label className="flex items-center gap-2 text-sm text-gray-600">
+        <label className="flex items-center gap-2 text-sm text-navy-dark/60">
           <input
             type="checkbox"
             checked={includeInternational}
             onChange={(e) => handleToggleInternational(e.target.checked)}
-            className="h-4 w-4 rounded border-gray-300"
+            className="h-4 w-4 rounded border-sand"
           />
           Include international options
         </label>
       </div>
 
       {location && (
-        <p className="mb-5 flex items-center gap-1.5 text-xs text-gray-500">
+        <p className="mb-5 flex items-center gap-1.5 text-xs text-navy-dark/50">
           <MapPin className="h-3.5 w-3.5" /> Showing trips near {location.name}
         </p>
       )}
 
       {status === 'locating' && (
-        <div className="flex items-center gap-2 rounded-2xl border border-gray-200 bg-white/70 p-6 text-sm text-gray-500">
-          <CompassSpinner className="h-4 w-4" /> Finding your location...  
-                </div>
+        <div className="flex items-center gap-2 rounded-2xl border border-sand bg-cream/70 p-6 text-sm text-navy-dark/50">
+          <CompassSpinner className="h-4 w-4" /> Finding your location...
+        </div>
       )}
 
       {status === 'generating' && (
@@ -160,8 +160,8 @@ export default function ExploreClient() {
       )}
 
       {status === 'denied' && !location && (
-        <div className="flex flex-col items-center gap-2 rounded-2xl border border-gray-200 bg-white/70 p-10 text-center text-sm text-gray-500">
-          <LocateFixed className="h-6 w-6 text-gray-300" />
+        <div className="flex flex-col items-center gap-2 rounded-2xl border border-sand bg-cream/70 p-10 text-center text-sm text-navy-dark/50">
+          <LocateFixed className="h-6 w-6 text-navy-dark/20" />
           Couldn&apos;t get your location. Search a place above to see trip ideas.
         </div>
       )}
@@ -173,7 +173,7 @@ export default function ExploreClient() {
       )}
 
       {location && status === 'idle' && !hasAnyResults && (
-        <div className="flex flex-col items-center gap-2 rounded-2xl border border-gray-200 bg-white/70 p-10 text-center text-sm text-gray-500">
+        <div className="flex flex-col items-center gap-2 rounded-2xl border border-sand bg-cream/70 p-10 text-center text-sm text-navy-dark/50">
           No trip ideas found near {location.name} yet.
         </div>
       )}
@@ -183,7 +183,7 @@ export default function ExploreClient() {
           {grouped.map((section) =>
             section.items.length > 0 ? (
               <div key={section.key}>
-                <h2 className="mb-3 text-sm font-semibold text-gray-800">{section.label}</h2>
+                <h2 className="mb-3 font-serif text-sm font-semibold text-navy-dark">{section.label}</h2>
                 <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
                   {section.items.map(({ template, distanceKm }) => (
                     <TemplateCard key={template.id} template={template} distanceKm={distanceKm} />

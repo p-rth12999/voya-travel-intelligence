@@ -38,6 +38,7 @@ export default function TripForm() {
     resolver: zodResolver(tripFormSchema),
     defaultValues: {
       title: '',
+      description: '',
       source: '',
       destinations: [],
       useExactDates: false,
@@ -135,6 +136,7 @@ export default function TripForm() {
     const { error } = await supabase.from('trips').insert({
       user_id: user.id,
       title: data.title,
+      description: data.description || null,
       source: data.source,
       destinations: destinationNames,
       destination_meta: destinationMeta,
@@ -181,6 +183,18 @@ export default function TripForm() {
           className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
         />
         {errors.title && <p className="mt-1 text-sm text-red-600">{errors.title.message}</p>}
+      </div>
+
+      <div>
+        <label className="mb-1 block text-sm font-medium text-gray-700">Trip description (optional)</label>
+        <textarea
+          {...register('description')}
+          rows={2}
+          placeholder="e.g. This is a business trip — plan some on-the-go food spots and keep pacing light"
+          className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
+        />
+        {errors.description && <p className="mt-1 text-sm text-red-600">{errors.description.message}</p>}
+        <p className="mt-1 text-xs text-gray-400">Give the AI extra context for the whole trip — separate from per-destination notes below.</p>
       </div>
 
       <div>

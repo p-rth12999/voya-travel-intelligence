@@ -11,7 +11,7 @@ export default function CompassSpinner({ className = 'h-4 w-4' }: Props) {
       <line x1="1.5" y1="12" x2="3.5" y2="12" stroke="currentColor" strokeWidth="1.5" opacity="0.5" strokeLinecap="round" />
       <line x1="20.5" y1="12" x2="22.5" y2="12" stroke="currentColor" strokeWidth="1.5" opacity="0.5" strokeLinecap="round" />
       <g style={{ transformOrigin: '12px 12px', transformBox: 'view-box' }} className="animate-spin">
-        <path d="M12 4.5 L14 12 L10 12 Z" fill="#2563eb" />
+      <path d="M12 4.5 L14 12 L10 12 Z" fill="#b08d57" />
         <path d="M12 19.5 L14 12 L10 12 Z" fill="currentColor" opacity="0.35" />
       </g>
       <circle cx="12" cy="12" r="1.3" fill="currentColor" />

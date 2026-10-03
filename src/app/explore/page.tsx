@@ -9,10 +9,10 @@ export default async function ExplorePage() {
   if (!user) redirect('/login')
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#DEEDFC] lg:flex-row">
+    <div className="flex flex-col min-h-screen bg-cream lg:flex-row">
       <Sidebar />
       <div className="flex-1 p-6 lg:p-8">
-        <h1 className="mb-6 text-xl font-semibold text-gray-900">Explore</h1>
+        <h1 className="mb-6 font-serif text-xl font-semibold text-navy-dark">Explore</h1>
         <ExploreClient />
       </div>
     </div>

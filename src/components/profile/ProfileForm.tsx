@@ -79,11 +79,11 @@ export default function ProfileForm({
   }
 
   return (
-    <div className="max-w-lg rounded-3xl border border-white bg-white/80 p-6 shadow-sm">
+    <div className="max-w-lg rounded-3xl border border-sand bg-cream/80 p-6 shadow-sm">
       <div className="mb-6 flex items-center gap-4">
         <button
           onClick={() => fileInputRef.current?.click()}
-          className="relative flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-full bg-blue-100 text-blue-600 transition hover:opacity-80"
+          className="relative flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-full bg-brass/15 text-brass transition hover:opacity-80"
           disabled={uploading}
         >
           {avatarUrl ? (
@@ -94,10 +94,10 @@ export default function ProfileForm({
           )}
         </button>
         <div>
-          <p className="text-sm font-medium text-gray-900">Profile picture</p>
+          <p className="text-sm font-medium text-navy-dark">Profile picture</p>
           <button
             onClick={() => fileInputRef.current?.click()}
-            className="text-sm text-blue-600 hover:underline"
+            className="text-sm text-brass hover:underline"
             disabled={uploading}
           >
             {uploading ? 'Uploading...' : 'Click to change'}
@@ -113,29 +113,29 @@ export default function ProfileForm({
       </div>
 
       <div className="mb-4">
-        <label className="mb-1 block text-sm font-medium text-gray-700">Email</label>
+        <label className="mb-1 block text-sm font-medium text-navy-dark/70">Email</label>
         <input
           value={email}
           disabled
-          className="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-gray-500"
+          className="w-full rounded-lg border border-sand bg-sand/20 px-3 py-2 text-navy-dark/50"
         />
       </div>
 
       <div className="mb-4">
-        <label className="mb-1 block text-sm font-medium text-gray-700">Username</label>
+        <label className="mb-1 block text-sm font-medium text-navy-dark/70">Username</label>
         <input
           value={username}
           onChange={(e) => setUsername(e.target.value)}
-          className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
+          className="w-full rounded-lg border border-sand px-3 py-2 focus:border-brass focus:outline-none"
         />
       </div>
 
-      {message && <p className="mb-3 text-sm text-gray-600">{message}</p>}
+      {message && <p className="mb-3 text-sm text-navy-dark/60">{message}</p>}
 
       <button
         onClick={handleSave}
         disabled={saving}
-        className="rounded-full bg-blue-600 px-5 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50"
+        className="rounded-full bg-brass px-5 py-2 text-sm font-medium text-navy-dark hover:bg-brass/90 disabled:opacity-50"
       >
         {saving ? 'Saving...' : 'Save changes'}
       </button>

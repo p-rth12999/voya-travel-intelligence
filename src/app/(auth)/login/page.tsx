@@ -53,18 +53,18 @@ export default function LoginPage() {
 }
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#0B1832] px-4">
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-indigo-dark px-4">
       <div
         className="absolute inset-0 bg-cover bg-center opacity-30"
         style={{ backgroundImage: "url('/images/world-map.png')" }}
       />
-      <div className="absolute inset-0 bg-gradient-to-b from-[#0B1832]/40 via-[#0B1832]/70 to-[#0B1832]" />
+      <div className="absolute inset-0 bg-gradient-to-b from-indigo-dark/40 via-indigo-dark/70 to-indigo-dark" />
 
-      <div className="relative z-10 w-full max-w-sm rounded-3xl border border-white/10 bg-white/95 p-8 shadow-2xl backdrop-blur">
+      <div className="relative z-10 w-full max-w-sm rounded-3xl border border-sand/20 bg-cream/95 p-8 shadow-2xl backdrop-blur">
         <div className="mb-6 flex flex-col items-center text-center">
           <Logo height={32} />
-          <h1 className="mt-3 text-xl font-semibold text-gray-900">Welcome to Voya</h1>
-          <p className="mt-1 text-sm text-gray-500">
+          <h1 className="mt-3 font-serif text-xl font-semibold text-indigo-dark">Welcome to Voya</h1>
+          <p className="mt-1 text-sm text-indigo-dark/50">
             {mode === 'signup'
               ? 'Create your account to start planning'
               : mode === 'forgot'
@@ -76,37 +76,37 @@ export default function LoginPage() {
         <form onSubmit={handleSubmit} className="space-y-4">
           {mode !== 'forgot' && (
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">Username</label>
+              <label className="mb-1 block text-sm font-medium text-indigo-dark/80">Username</label>
               <input
                 type="text"
                 required={mode === 'signup'}
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
+                className="w-full rounded-lg border border-sand px-3 py-2 focus:border-brass focus:outline-none"
               />
             </div>
           )}
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">Email</label>
+            <label className="mb-1 block text-sm font-medium text-indigo-dark/80">Email</label>
             <input
               type="email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
+              className="w-full rounded-lg border border-sand px-3 py-2 focus:border-brass focus:outline-none"
             />
           </div>
 
           {mode !== 'forgot' && (
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">Password</label>
+              <label className="mb-1 block text-sm font-medium text-indigo-dark/80">Password</label>
               <input
                 type="password"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
+                className="w-full rounded-lg border border-sand px-3 py-2 focus:border-brass focus:outline-none"
               />
             </div>
           )}
@@ -115,7 +115,7 @@ export default function LoginPage() {
             <button
               type="button"
               onClick={() => { setMode('forgot'); setError(null); setMessage(null) }}
-              className="text-sm text-blue-600 hover:underline"
+              className="text-sm text-brass hover:underline"
             >
               Forgot password?
             </button>
@@ -127,23 +127,23 @@ export default function LoginPage() {
           <button
   type="submit"
   disabled={loading}
-  className="flex w-full items-center justify-center gap-2 rounded-full bg-blue-600 py-2.5 font-medium text-white transition hover:bg-blue-700 disabled:opacity-50"
+  className="flex w-full items-center justify-center gap-2 rounded-full bg-brass py-2.5 font-medium text-indigo-dark transition hover:bg-brass/90 disabled:opacity-50"
 >
-    {loading && <CompassSpinner className="h-4 w-4" />}
+  {loading && <CompassSpinner className="h-4 w-4" />}
   {loading ? 'Please wait...' : mode === 'signup' ? 'Sign up' : mode === 'forgot' ? 'Send reset link' : 'Sign In'}
 </button>
         </form>
 
         <button
           onClick={() => { setMode(mode === 'signup' ? 'signin' : 'signup'); setError(null); setMessage(null) }}
-          className="mt-4 w-full text-center text-sm text-blue-600 hover:underline"
+          className="mt-4 w-full text-center text-sm text-brass hover:underline"
         >
           {mode === 'signup' ? 'Already have an account? Sign in' : "Don't have an account? Sign up"}
         </button>
         {mode === 'forgot' && (
           <button
             onClick={() => { setMode('signin'); setError(null); setMessage(null) }}
-            className="mt-2 w-full text-center text-sm text-gray-500 hover:underline"
+            className="mt-2 w-full text-center text-sm text-indigo-dark/50 hover:underline"
           >
             Back to sign in
           </button>

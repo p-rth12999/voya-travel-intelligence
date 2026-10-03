@@ -28,7 +28,7 @@ export default function TripStatusActions({ trip }: { trip: Trip }) {
 
   return (
     <>
-      <button onClick={() => setShowRating(true)} className="rounded-full border border-white/25 bg-black/40 px-3 py-1.5 text-sm text-white shadow-md backdrop-blur-md hover:bg-black/55">
+      <button onClick={() => setShowRating(true)} className="rounded-full border border-sand/25 bg-black/40 px-3 py-1.5 text-sm text-white shadow-md backdrop-blur-md hover:bg-black/55">
         Mark Completed
       </button>
       <button onClick={() => setShowCancelConfirm(true)} className="rounded-full border border-red-300/40 bg-red-600/50 px-3 py-1.5 text-sm text-white shadow-md backdrop-blur-md hover:bg-red-600/65">

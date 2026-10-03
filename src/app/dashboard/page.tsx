@@ -47,7 +47,7 @@ export default async function DashboardPage() {
     return <div className="p-8 text-sm text-red-600">Couldn&apos;t load your trips: {error.message}</div>
   }
   return (
-    <div className="flex flex-col min-h-screen bg-[#DEEDFC] lg:flex-row">
+    <div className="flex flex-col min-h-screen bg-cream lg:flex-row">
       <Sidebar />
       <div className="flex-1 p-6 lg:p-8">
         <DashboardHeaderWrapper

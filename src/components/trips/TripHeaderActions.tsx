@@ -12,7 +12,7 @@ export default function TripHeaderActions({ trip }: { trip: Trip }) {
 
   return (
     <>
-      <button onClick={() => setIsEditing(true)} className="flex items-center gap-1 rounded-full border border-white/25 bg-black/40 px-3 py-1.5 text-sm text-white shadow-md backdrop-blur-md hover:bg-black/55">
+      <button onClick={() => setIsEditing(true)} className="flex items-center gap-1 rounded-full border border-sand/25 bg-black/40 px-3 py-1.5 text-sm text-white shadow-md backdrop-blur-md hover:bg-black/55">
         <Pencil className="h-3.5 w-3.5" /> Edit
       </button>
       <OfflineExportButton tripId={trip.id} />
