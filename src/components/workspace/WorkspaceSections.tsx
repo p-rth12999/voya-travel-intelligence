@@ -47,13 +47,13 @@ export default function WorkspaceSections({
           <JourneyCard journeyPlan={content.journeyPlan} sourceMeta={sourceMeta} destinationMeta={destinationMeta} />
         </div>
 
-        <div className="mb-5 flex flex-wrap gap-1 rounded-2xl border border-white bg-white/80 p-1.5 shadow-sm backdrop-blur print:hidden">
+        <div className="mb-5 flex flex-wrap gap-1 rounded-2xl border border-sand bg-cream/80 p-1.5 shadow-sm backdrop-blur print:hidden">
           {TABS.filter((t) => t !== 'Utilities' || hasUtilities).map((t) => (
             <button
               key={t}
               onClick={() => setTab(t)}
               className={`rounded-xl px-4 py-2 text-sm font-medium transition ${
-                tab === t ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-50'
+                tab === t ? 'bg-brass text-navy-dark' : 'text-navy-dark/60 hover:bg-sand/40'
               }`}
             >
               {t}

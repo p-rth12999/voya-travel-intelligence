@@ -45,7 +45,7 @@ export default function JourneyCard({
   return (
     <WorkspaceCard title="Journey" icon={Route}>
       {journeyPlan.optimized && (
-        <p className="mb-4 text-xs font-medium text-blue-600">Reordered by AI for a more practical route</p>
+        <p className="mb-4 text-xs font-medium text-brass">Reordered by AI for a more practical route</p>
       )}
       <div className="space-y-1">
         {journeyPlan.legs.map((leg, i) => {
@@ -58,35 +58,35 @@ export default function JourneyCard({
 
           return (
             <div key={i}>
-              <div className="flex items-center gap-2 rounded-2xl border border-gray-200 bg-gray-50 px-4 py-2.5">
+              <div className="flex items-center gap-2 rounded-2xl border border-sand bg-sand/20 px-4 py-2.5">
                 <span className="text-lg">{countryCodeToFlag(fromMeta?.countryCode ?? null)}</span>
-                <span className="text-sm font-medium text-gray-800">{leg.from}</span>
+                <span className="text-sm font-medium text-navy-dark">{leg.from}</span>
               </div>
 
-              <div className="ml-5 flex flex-col gap-1 border-l-2 border-blue-200 py-2 pl-4">
-                <div className="flex flex-wrap items-center gap-2 text-xs text-gray-600">
-                  <span className="rounded-full bg-blue-50 px-2 py-0.5 font-medium text-blue-700">{leg.transportMode}</span>
+              <div className="ml-5 flex flex-col gap-1 border-l-2 border-brass/30 py-2 pl-4">
+                <div className="flex flex-wrap items-center gap-2 text-xs text-navy-dark/60">
+                  <span className="rounded-full bg-brass/15 px-2 py-0.5 font-medium text-navy-dark">{leg.transportMode}</span>
                   {distanceKm !== null && <span>~{distanceKm} km</span>}
                   <span>{leg.estimatedTravelTime}</span>
                 </div>
-                {leg.note && <p className="text-xs text-gray-500">{leg.note}</p>}
+                {leg.note && <p className="text-xs text-navy-dark/50">{leg.note}</p>}
                 {leg.hiddenGems.length > 0 && (
                   <div className="mt-1 space-y-1">
                     {leg.hiddenGems.map((gem, gi) => (
-                      <div key={gi} className="flex items-start gap-1.5 text-xs text-gray-600">
-                        <Sparkles className="mt-0.5 h-3 w-3 shrink-0 text-purple-500" />
-                        <span><span className="font-medium text-gray-800">{gem.name}:</span> {gem.description}</span>
+                      <div key={gi} className="flex items-start gap-1.5 text-xs text-navy-dark/60">
+                        <Sparkles className="mt-0.5 h-3 w-3 shrink-0 text-brass" />
+                        <span><span className="font-medium text-navy-dark">{gem.name}:</span> {gem.description}</span>
                       </div>
                     ))}
                   </div>
                 )}
-                <ArrowDown className="h-4 w-4 text-blue-400" />
+                <ArrowDown className="h-4 w-4 text-brass/50" />
               </div>
 
               {i === journeyPlan.legs.length - 1 && (
-                <div className="flex items-center gap-2 rounded-2xl border border-gray-200 bg-gray-50 px-4 py-2.5">
+                <div className="flex items-center gap-2 rounded-2xl border border-sand bg-sand/20 px-4 py-2.5">
                   <span className="text-lg">{countryCodeToFlag(toMeta?.countryCode ?? null)}</span>
-                  <span className="text-sm font-medium text-gray-800">{leg.to}</span>
+                  <span className="text-sm font-medium text-navy-dark">{leg.to}</span>
                 </div>
               )}
             </div>

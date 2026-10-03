@@ -1,7 +1,8 @@
 'use client'
 
 import { RefObject } from 'react'
-import { Send, Sparkles, Loader2, RotateCcw } from 'lucide-react'
+import { Send, Sparkles, RotateCcw } from 'lucide-react'
+import CompassSpinner from '@/components/shared/CompassSpinner'
 import StartLocationBox, { ResolvedLocation } from './StartLocationBox'
 
 type ChatMessage = {
@@ -44,7 +45,7 @@ export default function TemplateChatColumn({
         {hasStarted && (
           <button
             onClick={onStartOver}
-            className="flex shrink-0 items-center gap-1.5 rounded-full border border-white/15 px-3 py-1 text-xs text-blue-100/60 transition hover:bg-white/5 hover:text-white"
+            className="flex shrink-0 items-center gap-1.5 rounded-full border border-sand/15 px-3 py-1 text-xs text-sand/60 transition hover:bg-sand/5 hover:text-cream"
           >
             <RotateCcw className="h-3 w-3" /> Start Over
           </button>
@@ -54,11 +55,11 @@ export default function TemplateChatColumn({
       <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-8 lg:px-10">
         {!hasStarted ? (
           <div className="flex h-full flex-col items-center justify-center text-center">
-            <Sparkles className="mb-4 h-8 w-8 text-blue-300" />
-            <h1 className="text-2xl font-semibold text-white lg:text-3xl">
+            <Sparkles className="mb-4 h-8 w-8 text-brass" />
+            <h1 className="font-serif text-2xl font-semibold text-cream lg:text-3xl">
               Plan your next trip...
             </h1>
-            <p className="mt-2 max-w-md text-sm text-blue-100/60">
+            <p className="mt-2 max-w-md text-sm text-sand/60">
               Describe a trip idea in your own words — I&apos;ll turn it into a template as we chat.
             </p>
           </div>
@@ -68,7 +69,7 @@ export default function TemplateChatColumn({
               <div key={i} className={`flex flex-col ${m.role === 'user' ? 'items-end' : 'items-start'}`}>
                 <div
                   className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-sm ${
-                    m.role === 'user' ? 'bg-blue-600 text-white' : 'bg-white/10 text-blue-50'
+                    m.role === 'user' ? 'bg-brass text-navy-dark' : 'bg-sand/10 text-sand'
                   }`}
                 >
                   {m.content}
@@ -79,7 +80,7 @@ export default function TemplateChatColumn({
                       <button
                         key={s}
                         onClick={() => onSuggestionClick(s)}
-                        className="rounded-full border border-blue-400/40 bg-blue-500/10 px-3 py-1.5 text-xs text-blue-100 transition hover:bg-blue-500/20"
+                        className="rounded-full border border-brass/40 bg-brass/10 px-3 py-1.5 text-xs text-sand transition hover:bg-brass/20"
                       >
                         {s}
                       </button>
@@ -90,8 +91,8 @@ export default function TemplateChatColumn({
             ))}
             {loading && (
               <div className="flex justify-start">
-                <div className="flex items-center gap-2 rounded-2xl bg-white/10 px-4 py-2.5 text-sm text-blue-100/60">
-                  <Loader2 className="h-3.5 w-3.5 animate-spin" /> Thinking...
+                <div className="flex items-center gap-2 rounded-2xl bg-sand/10 px-4 py-2.5 text-sm text-sand/60">
+                  <CompassSpinner className="h-3.5 w-3.5" /> Thinking...
                 </div>
               </div>
             )}
@@ -99,21 +100,21 @@ export default function TemplateChatColumn({
         )}
       </div>
 
-      <div className="border-t border-white/10 px-4 py-4 lg:px-10">
-        <div className="mx-auto flex max-w-2xl items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-2 backdrop-blur">
+      <div className="border-t border-sand/10 px-4 py-4 lg:px-10">
+        <div className="mx-auto flex max-w-2xl items-center gap-2 rounded-full border border-sand/15 bg-sand/5 px-4 py-2 backdrop-blur">
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && onSend()}
             placeholder="Describe your trip idea..."
             disabled={loading}
-            className="flex-1 bg-transparent text-sm text-white placeholder:text-blue-100/40 focus:outline-none"
-            style={{ color: '#ffffff', colorScheme: 'dark' }}
+            className="flex-1 bg-transparent text-sm text-cream placeholder:text-sand/40 focus:outline-none"
+            style={{ color: '#faf6ee', colorScheme: 'dark' }}
           />
           <button
             onClick={onSend}
             disabled={loading || !input.trim()}
-            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-600 text-white transition hover:bg-blue-700 disabled:opacity-40"
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brass text-navy-dark transition hover:bg-brass/90 disabled:opacity-40"
             aria-label="Send"
           >
             <Send className="h-3.5 w-3.5" />

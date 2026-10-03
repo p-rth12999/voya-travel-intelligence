@@ -17,7 +17,7 @@ export default function WorkspaceGrid({
 }) {
   return (
     <div>
-      <div className="mb-5 flex items-center gap-2 rounded-2xl border border-blue-100 bg-blue-50/70 px-4 py-3 text-sm text-blue-800">
+      <div className="mb-5 flex items-center gap-2 rounded-2xl border border-blue-100 bg-cream/80 px-4 py-3 text-sm text-blue-800">
         <Sparkles className="h-4 w-4 shrink-0" />
         Want something different? Just tell the AI chat what to change — it can update any part of this plan for you.
       </div>

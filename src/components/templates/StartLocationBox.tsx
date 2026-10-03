@@ -24,7 +24,6 @@ export default function StartLocationBox({ location, onChange }: Props) {
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const triedAutoLocate = useRef(false)
 
-  // Try browser geolocation once, silently — fully skippable if denied/unavailable
   useEffect(() => {
     if (location || triedAutoLocate.current) return
     triedAutoLocate.current = true
@@ -77,12 +76,12 @@ export default function StartLocationBox({ location, onChange }: Props) {
 
   if (location) {
     return (
-      <div className="flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs text-blue-100/80">
-        <MapPin className="h-3 w-3 text-blue-300" />
+      <div className="flex items-center gap-1.5 rounded-full border border-sand/15 bg-sand/5 px-3 py-1 text-xs text-sand/80">
+        <MapPin className="h-3 w-3 text-brass" />
         Near {location.name}
         <button
           onClick={() => onChange(null)}
-          className="ml-1 text-blue-100/40 hover:text-white"
+          className="ml-1 text-sand/40 hover:text-cream"
           aria-label="Clear starting location"
         >
           <X className="h-3 w-3" />
@@ -95,28 +94,28 @@ export default function StartLocationBox({ location, onChange }: Props) {
     <div className="relative w-full max-w-[220px]">
       <div className="relative">
         {locating ? (
-          <LocateFixed className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 animate-pulse text-blue-300" />
+          <LocateFixed className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 animate-pulse text-brass" />
         ) : (
-          <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-blue-100/40" />
+          <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-sand/40" />
         )}
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => results.length > 0 && setOpen(true)}
           placeholder={locating ? 'Finding your location...' : 'Set starting location'}
-          className="w-full rounded-full border border-white/15 bg-white/5 py-1.5 pl-8 pr-3 text-xs text-white placeholder:text-blue-100/40 focus:border-blue-400/50 focus:outline-none"
-          style={{ color: '#ffffff', colorScheme: 'dark' }}
+          className="w-full rounded-full border border-sand/15 bg-sand/5 py-1.5 pl-8 pr-3 text-xs text-cream placeholder:text-sand/40 focus:border-brass/50 focus:outline-none"
+          style={{ color: '#faf6ee', colorScheme: 'dark' }}
         />
       </div>
       {open && results.length > 0 && (
-        <ul className="absolute z-20 mt-1 w-full rounded-2xl border border-white/10 bg-[#0B1832] shadow-lg">
+        <ul className="absolute z-20 mt-1 w-full rounded-2xl border border-sand/10 bg-navy-dark shadow-lg">
           {results.map((r, i) => (
             <li key={i}>
               <button
                 onClick={() => handlePick(r)}
-                className="flex w-full items-center gap-2 px-3 py-2 text-left text-xs text-blue-50 hover:bg-white/10"
+                className="flex w-full items-center gap-2 px-3 py-2 text-left text-xs text-sand hover:bg-sand/10"
               >
-                <MapPin className="h-3 w-3 shrink-0 text-blue-100/40" />
+                <MapPin className="h-3 w-3 shrink-0 text-sand/40" />
                 {r.name}{r.admin1 ? `, ${r.admin1}` : ''}{r.country ? `, ${r.country}` : ''}
               </button>
             </li>

@@ -67,12 +67,12 @@ export default function TemplateMakerPage() {
   const [loading, setLoading] = useState(false)
   const [questionsAsked, setQuestionsAsked] = useState<number>(() => loadSaved()?.questionsAsked || 0)
   const [readyToCreate, setReadyToCreate] = useState<boolean>(() => loadSaved()?.readyToCreate || false)
-  const canCreate = isDraftComplete(draft)
   const [startLocation, setStartLocation] = useState<ResolvedLocation | null>(() => loadSaved()?.startLocation || null)
   const [creating, setCreating] = useState(false)
   const scrollRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
   const supabase = createClient()
+  const canCreate = isDraftComplete(draft)
 
   useEffect(() => {
     if (messages.length === 0) return
@@ -94,7 +94,6 @@ export default function TemplateMakerPage() {
     setQuestionsAsked(0)
     setReadyToCreate(false)
     setInput('')
-    // startLocation intentionally preserved — that's about where you are, not the conversation
   }
 
   async function handleSend(overrideText?: string) {
@@ -198,7 +197,7 @@ export default function TemplateMakerPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#0B1832] lg:flex-row">
+    <div className="flex min-h-screen flex-col bg-navy-dark lg:flex-row">
       <Sidebar />
 
       {/* Mobile: stacked, not resizable */}
@@ -217,7 +216,7 @@ export default function TemplateMakerPage() {
             onLocationChange={setStartLocation}
           />
         </div>
-        <div className="border-t border-white/10">
+        <div className="border-t border-sand/10">
           <TemplateDraftPanel draft={draft} readyToCreate={canCreate} creating={creating} onCreate={handleCreate} />
         </div>
       </div>
@@ -239,7 +238,7 @@ export default function TemplateMakerPage() {
               onLocationChange={setStartLocation}
             />
           </Panel>
-          <PanelResizeHandle className="w-1 bg-white/10 transition hover:bg-blue-500/50 active:bg-blue-500" />
+          <PanelResizeHandle className="w-1 bg-sand/10 transition hover:bg-brass/50 active:bg-brass" />
           <Panel defaultSize="30%" minSize="22%" maxSize="45%">
             <TemplateDraftPanel draft={draft} readyToCreate={canCreate} creating={creating} onCreate={handleCreate} />
           </Panel>
